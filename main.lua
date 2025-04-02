@@ -40,9 +40,7 @@ local Tabs = {
     Main = Window:Tab({ Title = "Main", Icon = "rbxassetid://7733960981", Desc = "main" }),
 }
 
-Window:SelectTab(1)
-
-Tabs.User:Section({ Title = "Part Esp" })
+Tabs.Main:Section({ Title = "Part Esp" })
 Tabs.Main:Paragraph({
     Title = "Enemy",
     Image = "rbxassetid://7733770982",
