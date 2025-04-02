@@ -39,7 +39,7 @@ local function CreateESP(part)
     local function UpdateESP()
         if part and part.Parent then
             local distance = (Camera.CFrame.Position - part.Position).Magnitude
-            TextLabel.Text = string.format("ENEMY\n%.1f studs", distance)
+            TextLabel.Text = string.format("Name: ENEMY | Studs: %.1f", distance)
             aura.Position = part.Position
         else
             ESPs[part] = nil
