@@ -155,6 +155,14 @@ Tabs.Main:Button({
     end
 })
 
+Tabs.Main:Button({
+    Title = "Better Camera",
+    Desc = "Removes nos from PlayerGui",
+    Callback = function()
+        game:GetService("Players").LocalPlayer.PlayerGui.nos:Destroy()
+    end
+})
+
 Tabs.Main:Section({ Title = "Level 1 Functions" })
 
 Tabs.Main:Button({
@@ -209,14 +217,6 @@ Tabs.Main:Button({
             task.wait(0.5)
             fireproximityprompt(workspace.Server.SpawnedItems.Ofuda.Handle.ItemInteractP)
         end
-    end
-})
-
-Tabs.Main:Button({
-    Title = "Better Camera",
-    Desc = "Removes nos from PlayerGui",
-    Callback = function()
-        game:GetService("Players").LocalPlayer.PlayerGui.nos:Destroy()
     end
 })
 
