@@ -125,6 +125,101 @@ Tabs.Main:Toggle({
     end
 })
 
+Tabs.Main:Section({ Title = " ", TextXAlignment = "Center" })
+Tabs.Main:Button({
+    Title = "Collect Money",
+    Desc = "Collects all available coins",
+    Callback = function()
+        local Char = game.Players.LocalPlayer.Character
+        local Humanoid = Char.HumanoidRootPart
+        local PreP = Instance.new("Part")
+        PreP.Position = Humanoid.Position
+        PreP.Anchored = true
+        PreP.CanCollide = false
+        PreP.Transparency = 1
+        PreP.Parent = game.Workspace
+        PreP.Name = "PreviousPart"
+        
+        for _, zeni in pairs(workspace.Server.SpawnedItems:GetChildren()) do
+            if zeni:FindFirstChild("Meshes/coin") and zeni:FindFirstChild("InteractPoint") then
+                Humanoid.CFrame = zeni:WaitForChild("InteractPoint").CFrame
+                task.wait(0.5)
+                fireproximityprompt(zeni:WaitForChild("InteractPoint"):WaitForChild("ItemInteractP"))
+            end
+        end
+        
+        task.wait(0.25)
+        Humanoid.CFrame = PreP.CFrame
+        task.wait(1)
+        game.Workspace.PreviousPart:Destroy()
+    end
+})
+
+Tabs.Main:Section({ Title = "Level 1 Functions" })
+
+Tabs.Main:Button({
+    Title = "Get Key and Ofuda",
+    Desc = "Collects key and uses it to get Ofuda",
+    Callback = function()
+        local Character = game.Players.LocalPlayer.Character
+        local Box = workspace.Server.SpawnedItems.OfudaBox2.OfudaPoint
+        local Humanoid = game.Players.LocalPlayer.Character.HumanoidRootPart
+        local Backpack = game:GetService("Players").LocalPlayer.Backpack
+        local Items = workspace.Server.SpawnedItems
+        local Key = Items:FindFirstChild("Key")
+        
+        if Key:FindFirstChild("InteractPoint") then
+            Humanoid.CFrame = Key.WorldPivot
+            task.wait(0.3)
+            fireproximityprompt(workspace.Server.SpawnedItems.Key.InteractPoint.ItemInteractP)
+            task.wait(0.3)
+        end
+        
+        if Backpack:FindFirstChild("Key") then
+            Humanoid.CFrame = Box.CFrame
+            task.wait(0.3)
+            Character.Humanoid:EquipTool(Backpack:WaitForChild("Key"))
+            task.wait(0.3)
+            fireproximityprompt(workspace.Server.SpawnedItems.OfudaBox2.InteractPoint.ItemInteractP)
+            task.wait(0.5)
+            fireproximityprompt(workspace.Server.SpawnedItems.Ofuda.Handle.ItemInteractP)
+            Humanoid.CFrame = CFrame.new(560.903931, 39.1999626, 602.641663, 0.999947727, 8.53170786e-05, -0.0102250045, 3.32571208e-16, 0.999965191, 0.00834367424, 0.0102253603, -0.00834323838, 0.999912918)
+            task.wait(0.3)
+            game:GetService("ReplicatedStorage").ItemHandler.OfudaRequest:FireServer(CFrame.new(518.0667724609375, 41.32714080810547, 609.953125) * CFrame.Angles(2.7852535247802734, 0.13421067595481873, -3.0918264389038086))
+        end
+    end
+})
+
+Tabs.Main:Button({
+    Title = "Use Key for Ofuda",
+    Desc = "Uses existing key to get Ofuda",
+    Callback = function()
+        local Character = game.Players.LocalPlayer.Character
+        local Box = workspace.Server.SpawnedItems.OfudaBox2.OfudaPoint
+        local Humanoid = game.Players.LocalPlayer.Character.HumanoidRootPart
+        local Backpack = game:GetService("Players").LocalPlayer.Backpack
+        local Items = workspace.Server.SpawnedItems
+        
+        if Backpack:FindFirstChild("Key") then
+            Humanoid.CFrame = Box.CFrame
+            task.wait(0.3)
+            Character.Humanoid:EquipTool(Backpack:WaitForChild("Key"))
+            task.wait(0.3)
+            fireproximityprompt(workspace.Server.SpawnedItems.OfudaBox2.InteractPoint.ItemInteractP)
+            task.wait(0.5)
+            fireproximityprompt(workspace.Server.SpawnedItems.Ofuda.Handle.ItemInteractP)
+        end
+    end
+})
+
+Tabs.Main:Button({
+    Title = "Better Camera",
+    Desc = "Removes nos from PlayerGui",
+    Callback = function()
+        game:GetService("Players").LocalPlayer.PlayerGui.nos:Destroy()
+    end
+})
+
 local ESP = loadstring(game:HttpGet("https://raw.githubusercontent.com/linemaster2/esp-library/main/library.lua"))();
 
 ESP.Enabled = false
@@ -155,7 +250,7 @@ Tabs.Visual:Toggle({
 Tabs.Visual:Dropdown({
     Title = "Box Type",
     Values = {"2D", "Corner Box Esp"},
-    Value = "Corner Box Esp",
+    Value = "2D",
     Callback = function(option)
         ESP.BoxType = option
     end
@@ -188,7 +283,7 @@ Tabs.Visual:Toggle({
 Tabs.Visual:Dropdown({
     Title = "Box Type",
     Values = {"Top", "Middle", "Bottom"},
-    Value = "Middle",
+    Value = "Bottom",
     Callback = function(option)
         ESP.TracerPosition = option
     end
