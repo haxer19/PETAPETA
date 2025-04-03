@@ -9,6 +9,16 @@ local EnemyFolder = workspace:WaitForChild("Client"):WaitForChild("Enemy")
 local ESPs = {}
 
 local function CreateESP(part)
+    local aura = Instance.new("Part")
+    aura.Size = part.Size + Vector3.new(2, 2, 2) 
+    aura.Shape = Enum.PartType.Ball
+    aura.Color = Color3.fromRGB(255, 0, 0)
+    aura.Material = Enum.Material.Neon
+    aura.Transparency = 0.5
+    aura.Anchored = true
+    aura.CanCollide = false
+    aura.Parent = part
+
     local Billboard = Instance.new("BillboardGui")
     Billboard.Adornee = part
     Billboard.Size = UDim2.new(0, 150, 0, 40)
@@ -24,12 +34,13 @@ local function CreateESP(part)
     TextLabel.TextSize = 18
     TextLabel.Parent = Billboard
 
-    ESPs[part] = {Billboard, TextLabel}
+    ESPs[part] = {aura, Billboard, TextLabel}
 
     local function UpdateESP()
         if part and part.Parent then
             local distance = (Camera.CFrame.Position - part.Position).Magnitude
             TextLabel.Text = string.format("Name: ENEMY | Studs: %.1f", distance)
+            aura.Position = part.Position
         else
             ESPs[part] = nil
         end
