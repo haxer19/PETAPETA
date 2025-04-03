@@ -68,12 +68,6 @@ Tabs.Main:Toggle({
     Callback = function(state)
         local Lighting = game:GetService("Lighting")
         if state then
-            Lighting.Brightness = 2
-            Lighting.ClockTime = 14
-            Lighting.FogEnd = 100000
-            Lighting.GlobalShadows = false
-            Lighting.Ambient = Color3.fromRGB(255, 255, 255)
-        else
             Lighting.Brightness = 1
             Lighting.ClockTime = 12
             Lighting.FogEnd = 10000
