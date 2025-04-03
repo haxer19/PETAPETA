@@ -61,7 +61,7 @@ Tabs.Main:Paragraph({
         }
     }
 })
-
+Tabs.Main:Section({ Title = " ", TextXAlignment = "Center" })
 Tabs.Main:Toggle({
     Title = "Fullbright",
     Default = true,
