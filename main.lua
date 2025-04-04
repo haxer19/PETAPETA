@@ -223,7 +223,7 @@ ESP.ShowHealth = false
 ESP.ShowTracer = false
 ESP.ShowDistance = false
 
-Tabs.Visual:Section({ Title = "ESP Settings" })
+Tabs.Visual:Section({ Title = "ESP PLAYER", TextXAlignment = "Center" })
 
 Tabs.Visual:Toggle({
     Title = "Enable ESP",
@@ -238,15 +238,6 @@ Tabs.Visual:Toggle({
     Default = false,
     Callback = function(state)
         ESP.ShowBox = state
-    end
-})
-
-Tabs.Visual:Dropdown({
-    Title = "Box Type",
-    Values = {"2D", "Corner Box Esp"},
-    Value = "2D",
-    Callback = function(option)
-        ESP.BoxType = option
     end
 })
 
@@ -274,6 +265,25 @@ Tabs.Visual:Toggle({
     end
 })
 
+Tabs.Visual:Toggle({
+    Title = "Show Distance",
+    Default = false,
+    Callback = function(state)
+        ESP.ShowDistance = state
+    end
+})
+
+Tabs.Visual:Section({ Title = "Settings", TextXAlignment = "Center" })
+
+Tabs.Visual:Dropdown({
+    Title = "Box Type",
+    Values = {"2D", "Corner Box Esp"},
+    Value = "2D",
+    Callback = function(option)
+        ESP.BoxType = option
+    end
+})
+
 Tabs.Visual:Dropdown({
     Title = "Box Type",
     Values = {"Top", "Middle", "Bottom"},
@@ -283,11 +293,112 @@ Tabs.Visual:Dropdown({
     end
 })
 
-Tabs.Visual:Toggle({
-    Title = "Show Distance",
-    Default = false,
-    Callback = function(state)
-        ESP.ShowDistance = state
+Tabs.Visual:Dropdown({
+    Title = "Box Outline Color",
+    Values = {
+        ["Black"] = Color3.new(0, 0, 0),
+        ["White"] = Color3.new(1, 1, 1),
+        ["Red"] = Color3.new(1, 0, 0),
+        ["Blue"] = Color3.new(0, 0, 1)
+    },
+    Value = "",
+    Callback = function(option)
+        ESP.BoxOutlineColor = option
+    end
+})
+
+Tabs.Visual:Dropdown({
+    Title = "Box Color",
+    Values = {
+        ["White"] = Color3.new(1, 1, 1),
+        ["Red"] = Color3.new(1, 0, 0),
+        ["Green"] = Color3.new(0, 1, 0),
+        ["Blue"] = Color3.new(0, 0, 1)
+    },
+    Value = "",
+    Callback = function(option)
+        ESP.BoxColor = option
+    end
+})
+
+Tabs.Visual:Dropdown({
+    Title = "Name Color",
+    Values = {
+        ["White"] = Color3.new(1, 1, 1),
+        ["Yellow"] = Color3.new(1, 1, 0),
+        ["Cyan"] = Color3.new(0, 1, 1),
+        ["Pink"] = Color3.new(1, 0, 1)
+    },
+    Value = "",
+    Callback = function(option)
+        ESP.NameColor = option
+    end
+})
+
+Tabs.Visual:Dropdown({
+    Title = "Health Outline Color",
+    Values = {
+        ["Black"] = Color3.new(0, 0, 0),
+        ["White"] = Color3.new(1, 1, 1),
+        ["Gray"] = Color3.new(0.5, 0.5, 0.5)
+    },
+    Value = "",
+    Callback = function(option)
+        ESP.HealthOutlineColor = option
+    end
+})
+
+Tabs.Visual:Dropdown({
+    Title = "Health High Color",
+    Values = {
+        ["Green"] = Color3.new(0, 1, 0),
+        ["Lime"] = Color3.new(0.5, 1, 0),
+        ["Cyan"] = Color3.new(0, 1, 1)
+    },
+    Value = "",
+    Callback = function(option)
+        ESP.HealthHighColor = option
+    end
+})
+
+Tabs.Visual:Dropdown({
+    Title = "Health Low Color",
+    Values = {
+        ["Red"] = Color3.new(1, 0, 0),
+        ["Orange"] = Color3.new(1, 0.5, 0),
+        ["Yellow"] = Color3.new(1, 1, 0)
+    },
+    Value = "",
+    Callback = function(option)
+        ESP.HealthLowColor = option
+    end
+})
+
+Tabs.Visual:Dropdown({
+    Title = "Tracer Color",
+    Values = {
+        ["White"] = Color3.new(1, 1, 1),
+        ["Red"] = Color3.new(1, 0, 0),
+        ["Blue"] = Color3.new(0, 0, 1),
+        ["Purple"] = Color3.new(0.5, 0, 1)
+    },
+    Value = "",
+    Callback = function(option)
+        ESP.TracerColor = option
+    end
+})
+
+Tabs.Visual:Dropdown({
+    Title = "Skeletons Color",
+    Values = {
+        ["White"] = Color3.new(1, 1, 1),
+        ["Gray"] = Color3.new(0.5, 0.5, 0.5),
+        ["Green"] = Color3.new(0, 1, 0),
+        ["Blue"] = Color3.new(0, 0, 1)
+    },
+    Value = "",
+    Callback = function(option)
+        ESP.SkeletonsColor = option
     end
 })
 

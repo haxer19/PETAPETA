@@ -36,11 +36,11 @@ local function CreateESP(part)
     end
 
     RunService.RenderStepped:Connect(UpdateESP)
-
     Billboard.Parent = part
+
     StarterGui:SetCore("SendNotification", {
-        Title = "⚠️ Enemy Spotted!",
-        Text = "An enemy has appeared nearby!",
+        Title = "⚠️ Enemy Spotted",
+        Text = "PETAPETA spawned!",
         Duration = 5
     })
     warn("Enemy ESP Added: " .. part.Name)
@@ -51,11 +51,56 @@ local function RemoveESP(part)
         ESPs[part][1]:Destroy()
         ESPs[part] = nil
         StarterGui:SetCore("SendNotification", {
-            Title = "✅ Enemy Vanished!",
-            Text = "The enemy has disappeared!",
+            Title = "✅ Enemy Vanished",
+            Text = "PETAPETA despawned!",
             Duration = 5
         })        
         warn("Enemy ESP Removed: " .. part.Name)
+    end
+end
+
+local function addHighlightWithDelay(model)
+    task.wait(0.5) 
+    local newHighlight = Instance.new("Highlight")
+    newHighlight.FillColor = Color3.fromRGB(128, 0, 128) 
+    newHighlight.Parent = model
+end
+
+local function checkAndAddHighlight()
+    local clientFolder = workspace:FindFirstChild("Client")
+    if clientFolder then
+        local enemyFolder = clientFolder:FindFirstChild("Enemy")
+        if enemyFolder then
+            local clientEnemyPart = enemyFolder:FindFirstChild("ClientEnemy")
+            if clientEnemyPart and clientEnemyPart:IsA("Part") then
+                local enemyModel = clientEnemyPart:FindFirstChild("EnemyModel")
+                if enemyModel and enemyModel:IsA("Model") then
+                    addHighlightWithDelay(enemyModel)
+                end
+                
+                clientEnemyPart.ChildAdded:Connect(function(model)
+                    if model:IsA("Model") and model.Name == "EnemyModel" then
+                        addHighlightWithDelay(model)
+                    end
+                end)
+            end
+            
+            enemyFolder.ChildAdded:Connect(function(part)
+                if part:IsA("Part") and part.Name == "ClientEnemy" then
+                    part.ChildAdded:Connect(function(model)
+                        if model:IsA("Model") and model.Name == "EnemyModel" then
+                            addHighlightWithDelay(model)
+                        end
+                    end)
+                    if part:FindFirstChild("EnemyModel") then
+                        local existingModel = part:FindFirstChild("EnemyModel")
+                        if existingModel:IsA("Model") then
+                            addHighlightWithDelay(existingModel)
+                        end
+                    end
+                end
+            end)
+        end
     end
 end
 
@@ -66,3 +111,29 @@ EnemyFolder.ChildAdded:Connect(function(part)
 end)
 
 EnemyFolder.ChildRemoved:Connect(RemoveESP)
+
+checkAndAddHighlight()
+
+workspace.ChildAdded:Connect(function(child)
+    if child:IsA("Folder") and child.Name == "Client" then
+        child.ChildAdded:Connect(function(subChild)
+            if subChild:IsA("Folder") and subChild.Name == "Enemy" then
+                subChild.ChildAdded:Connect(function(part)
+                    if part:IsA("Part") and part.Name == "ClientEnemy" then
+                        part.ChildAdded:Connect(function(model)
+                            if model:IsA("Model") and model.Name == "EnemyModel" then
+                                addHighlightWithDelay(model)
+                            end
+                        end)
+                        if part:FindFirstChild("EnemyModel") then
+                            local existingModel = part:FindFirstChild("EnemyModel")
+                            if existingModel:IsA("Model") then
+                                addHighlightWithDelay(existingModel)
+                            end
+                        end
+                    end
+                end)
+            end
+        end)
+    end
+end)
