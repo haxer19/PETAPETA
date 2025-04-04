@@ -1,6 +1,6 @@
 local WindUI = loadstring(game:HttpGet("https://tree-hub.vercel.app/api/UI/WindUI"))()
 
-local function getopsize()
+function getopsize()
     local screenSize = workspace.CurrentCamera.ViewportSize
     if screenSize.X <= 720 then
         return UDim2.fromOffset(240, 180) 
@@ -72,6 +72,7 @@ Tabs.Main:Paragraph({
         }
     }
 })
+
 Tabs.Main:Section({ Title = " ", TextXAlignment = "Center" })
 Tabs.Main:Toggle({
     Title = "Fullbright",
@@ -79,23 +80,25 @@ Tabs.Main:Toggle({
     Callback = function(state)
         local Lighting = game:GetService("Lighting")
         if state then
-            Lighting.Brightness = 1.5
+            Lighting.Brightness = 2 
             Lighting.ClockTime = 12
-            Lighting.FogEnd = 15000
+            Lighting.FogEnd = 20000 
             Lighting.GlobalShadows = true
-            Lighting.Ambient = Color3.fromRGB(150, 150, 160)
-            Lighting.OutdoorAmbient = Color3.fromRGB(140, 140, 150)
-            Lighting.ShadowSoftness = 0.2
-            Lighting.ExposureCompensation = 0.1
+            Lighting.Ambient = Color3.fromRGB(170, 170, 180) 
+            Lighting.OutdoorAmbient = Color3.fromRGB(160, 160, 170) 
+            Lighting.ShadowSoftness = 0.15 
+            Lighting.ExposureCompensation = 0.2 
+            
             local bloom = Instance.new("BloomEffect")
-            bloom.Intensity = 0.1
-            bloom.Size = 24
-            bloom.Threshold = 1.5
+            bloom.Intensity = 0.15 
+            bloom.Size = 28 
+            bloom.Threshold = 1.4 
             bloom.Parent = Lighting
+            
             local colorCorrection = Instance.new("ColorCorrectionEffect")
-            colorCorrection.Brightness = 0.05
-            colorCorrection.Contrast = 0.1
-            colorCorrection.Saturation = 0.05
+            colorCorrection.Brightness = 0.1 
+            colorCorrection.Contrast = 0.15 
+            colorCorrection.Saturation = 0.1 
             colorCorrection.Parent = Lighting
         end
     end
