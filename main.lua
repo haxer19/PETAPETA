@@ -74,32 +74,15 @@ Tabs.Main:Paragraph({
 })
 
 Tabs.Main:Section({ Title = " ", TextXAlignment = "Center" })
+
+local fb = loadstring(game:HttpGet("https://raw.githubusercontent.com/haxer19/PETAPETA/main/fb"))()
+
 Tabs.Main:Toggle({
     Title = "Fullbright",
     Default = true,
     Callback = function(state)
-        local Lighting = game:GetService("Lighting")
         if state then
-            Lighting.Brightness = 2 
-            Lighting.ClockTime = 12
-            Lighting.FogEnd = 20000 
-            Lighting.GlobalShadows = true
-            Lighting.Ambient = Color3.fromRGB(170, 170, 180) 
-            Lighting.OutdoorAmbient = Color3.fromRGB(160, 160, 170) 
-            Lighting.ShadowSoftness = 0.15 
-            Lighting.ExposureCompensation = 0.2 
-            
-            local bloom = Instance.new("BloomEffect")
-            bloom.Intensity = 0.15 
-            bloom.Size = 28 
-            bloom.Threshold = 1.4 
-            bloom.Parent = Lighting
-            
-            local colorCorrection = Instance.new("ColorCorrectionEffect")
-            colorCorrection.Brightness = 0.1 
-            colorCorrection.Contrast = 0.15 
-            colorCorrection.Saturation = 0.1 
-            colorCorrection.Parent = Lighting
+            fb:Enable() 
         end
     end
 })
