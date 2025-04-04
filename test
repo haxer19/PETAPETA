@@ -1,0 +1,32 @@
+local gui = game:GetService("Players").LocalPlayer:FindFirstChild("PlayerGui")
+
+local keywordList = {"イ", "ロ", "ハ", "ニ", "ホ", "ヘ", "ト", "チ", "リ", "ヌ", "ル", "ヲ"}
+
+local function fThanhKW(text)
+    local count = 0
+    for _, word in pairs(keywordList) do
+        if string.find(text, word) then
+            count = count + 1
+            if count >= 3 then
+                return true
+            end
+        end
+    end
+    return false
+end
+
+local function scanGui()
+    if gui then
+        for _, object in pairs(gui:GetDescendants()) do
+            if object:IsA("TextLabel") or object:IsA("TextBox") or object:IsA("TextButton") then
+                if fThanhKW(object.Text) then
+                    print(object.Text)
+                end
+            end
+        end
+    end
+end
+
+while wait(1) do
+    scanGui()
+end

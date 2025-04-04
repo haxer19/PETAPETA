@@ -82,49 +82,67 @@ Tabs.Main:Toggle({
     Default = true,
     Callback = function(state)
         if state then
-            fb:Enable() 
+            local Lighting = game:GetService("Lighting")
+            Lighting.Brightness = 2
+            Lighting.ClockTime = 14
+            Lighting.FogEnd = 100000
+            Lighting.GlobalShadows = false
+            Lighting.OutdoorAmbient = Color3.fromRGB(128, 128, 128)
         end
     end
 })
 
 Tabs.Main:Toggle({
     Title = "NoClip",
-    Default = false, 
+    Default = false,
     Callback = function(state)
         local player = game.Players.LocalPlayer
         local character = player.Character or player.CharacterAdded:Wait()
-        local rootPart = character:WaitForChild("HumanoidRootPart")
         local humanoid = character:WaitForChild("Humanoid")
-        if state then
-            local noclip = Instance.new("BoolValue")
-            noclip.Name = "NoClip"
-            noclip.Value = true
-            noclip.Parent = character
-            
-            local function onNoclip()
-                for _, part in pairs(character:GetDescendants()) do
+
+        local function updateNoClip(char, enabled)
+            if enabled then
+                local noclip = Instance.new("BoolValue")
+                noclip.Name = "NoClip"
+                noclip.Value = true
+                noclip.Parent = char
+                
+                local connection
+                connection = game:GetService("RunService").Stepped:Connect(function()
+                    if not char:FindFirstChild("NoClip") then
+                        connection:Disconnect()
+                        return
+                    end
+                    for _, part in pairs(char:GetDescendants()) do
+                        if part:IsA("BasePart") then
+                            part.CanCollide = false
+                        end
+                    end
+                end)
+            else
+                if char:FindFirstChild("NoClip") then
+                    char.NoClip:Destroy()
+                end
+                for _, part in pairs(char:GetDescendants()) do
                     if part:IsA("BasePart") then
-                        part.CanCollide = false
+                        part.CanCollide = true
                     end
                 end
             end
-            local connection
-            connection = game:GetService("RunService").Stepped:Connect(function()
-                if not character:FindFirstChild("NoClip") then
-                    connection:Disconnect()
-                    return
-                end
-                onNoclip()
+        end
+
+        updateNoClip(character, state)
+
+        local connection
+        if state then
+            connection = player.CharacterAdded:Connect(function(newChar)
+                humanoid = newChar:WaitForChild("Humanoid")
+                updateNoClip(newChar, true)
             end)
-        else
-            if character:FindFirstChild("NoClip") then
-                character.NoClip:Destroy()
-            end
-            for _, part in pairs(character:GetDescendants()) do
-                if part:IsA("BasePart") then
-                    part.CanCollide = true
-                end
-            end
+        end
+        
+        if not state and connection then
+            connection:Disconnect()
         end
     end
 })
