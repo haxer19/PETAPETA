@@ -68,11 +68,24 @@ Tabs.Main:Toggle({
     Callback = function(state)
         local Lighting = game:GetService("Lighting")
         if state then
-            Lighting.Brightness = 1
+            Lighting.Brightness = 1.5
             Lighting.ClockTime = 12
-            Lighting.FogEnd = 10000
+            Lighting.FogEnd = 15000
             Lighting.GlobalShadows = true
-            Lighting.Ambient = Color3.fromRGB(128, 128, 128)
+            Lighting.Ambient = Color3.fromRGB(150, 150, 160)
+            Lighting.OutdoorAmbient = Color3.fromRGB(140, 140, 150)
+            Lighting.ShadowSoftness = 0.2
+            Lighting.ExposureCompensation = 0.1
+            local bloom = Instance.new("BloomEffect")
+            bloom.Intensity = 0.1
+            bloom.Size = 24
+            bloom.Threshold = 1.5
+            bloom.Parent = Lighting
+            local colorCorrection = Instance.new("ColorCorrectionEffect")
+            colorCorrection.Brightness = 0.05
+            colorCorrection.Contrast = 0.1
+            colorCorrection.Saturation = 0.05
+            colorCorrection.Parent = Lighting
         end
     end
 })
@@ -301,7 +314,7 @@ Tabs.Visual:Dropdown({
         ["Red"] = Color3.new(1, 0, 0),
         ["Blue"] = Color3.new(0, 0, 1)
     },
-    Value = "",
+    Value = Color3.new(1, 1, 1),
     Callback = function(option)
         ESP.BoxOutlineColor = option
     end
@@ -315,7 +328,7 @@ Tabs.Visual:Dropdown({
         ["Green"] = Color3.new(0, 1, 0),
         ["Blue"] = Color3.new(0, 0, 1)
     },
-    Value = "",
+    Value = Color3.new(1, 1, 1),
     Callback = function(option)
         ESP.BoxColor = option
     end
@@ -329,7 +342,7 @@ Tabs.Visual:Dropdown({
         ["Cyan"] = Color3.new(0, 1, 1),
         ["Pink"] = Color3.new(1, 0, 1)
     },
-    Value = "",
+    Value = Color3.new(1, 1, 1),
     Callback = function(option)
         ESP.NameColor = option
     end
@@ -342,7 +355,7 @@ Tabs.Visual:Dropdown({
         ["White"] = Color3.new(1, 1, 1),
         ["Gray"] = Color3.new(0.5, 0.5, 0.5)
     },
-    Value = "",
+    Value = Color3.new(1, 1, 1),
     Callback = function(option)
         ESP.HealthOutlineColor = option
     end
@@ -355,7 +368,7 @@ Tabs.Visual:Dropdown({
         ["Lime"] = Color3.new(0.5, 1, 0),
         ["Cyan"] = Color3.new(0, 1, 1)
     },
-    Value = "",
+    Value = Color3.new(0, 1, 0),
     Callback = function(option)
         ESP.HealthHighColor = option
     end
@@ -368,7 +381,7 @@ Tabs.Visual:Dropdown({
         ["Orange"] = Color3.new(1, 0.5, 0),
         ["Yellow"] = Color3.new(1, 1, 0)
     },
-    Value = "",
+    Value = Color3.new(1, 0, 0),
     Callback = function(option)
         ESP.HealthLowColor = option
     end
@@ -382,7 +395,7 @@ Tabs.Visual:Dropdown({
         ["Blue"] = Color3.new(0, 0, 1),
         ["Purple"] = Color3.new(0.5, 0, 1)
     },
-    Value = "",
+    Value = Color3.new(1, 1, 1),
     Callback = function(option)
         ESP.TracerColor = option
     end
@@ -396,7 +409,7 @@ Tabs.Visual:Dropdown({
         ["Green"] = Color3.new(0, 1, 0),
         ["Blue"] = Color3.new(0, 0, 1)
     },
-    Value = "",
+    Value = Color3.new(1, 1, 1),
     Callback = function(option)
         ESP.SkeletonsColor = option
     end
