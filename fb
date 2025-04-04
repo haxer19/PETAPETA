@@ -9,7 +9,7 @@ local connection
 local dynamicLight
 
 local function setupFullbright()
-    Lighting.Brightness = 2
+    Lighting.Brightness = 1  
     Lighting.ClockTime = 14
     Lighting.FogEnd = 100000
     Lighting.GlobalShadows = false
@@ -21,8 +21,8 @@ local function createDynamicLight(player)
     local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
     dynamicLight = Instance.new("PointLight")
     dynamicLight.Name = "DynamicFullbright"
-    dynamicLight.Brightness = 2
-    dynamicLight.Range = 30
+    dynamicLight.Brightness = 0.5  
+    dynamicLight.Range = 20  
     dynamicLight.Color = Color3.fromRGB(255, 255, 255)
     dynamicLight.Parent = humanoidRootPart
     
