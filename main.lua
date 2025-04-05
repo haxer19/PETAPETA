@@ -272,10 +272,11 @@ Tabs.Main:Button({
     Callback = function()
         local Character = game:GetService("Players").LocalPlayer.Character
         local HumanoidRootPart = Character and Character:FindFirstChild("HumanoidRootPart")
+        local Camera = workspace.CurrentCamera
         local Backpack = game:GetService("Players").LocalPlayer.Backpack
         local Box = workspace.Server.SpawnedItems.OfudaBox2.OfudaPoint
         local Key = workspace.Server.MapGenerated.Rooms.Room.Props.Safe.Key
-        local Camera = workspace.CurrentCamera
+        local Items = workspace.Server.SpawnedItems
         
         if not HumanoidRootPart then return end
 
@@ -296,73 +297,84 @@ Tabs.Main:Button({
                 cameraTween.Completed:Wait()
                 task.wait(1)
                 Camera.CameraType = Enum.CameraType.Custom
-                
                 break
             end
         end
         
         task.wait(2)
- 
+
         for _, Room in pairs(workspace.Server.MapGenerated.Rooms:GetChildren()) do
             if Room:WaitForChild("Props"):FindFirstChild("Safe") then
                 local Safe = Room.Props.Safe
                 moveToPosition(HumanoidRootPart, Safe.InteractPoint.CFrame, 2)
                 task.wait(0.25)
-                if Safe:FindFirstChild("InteractPoint") and Safe.InteractPoint:FindFirstChild("focus") then
+                if Safe:FindFirstChild("InteractPoint") and Safe:FindFirstChild("InteractPoint"):FindFirstChild("focus") then
                     fireproximityprompt(Safe.InteractPoint.focus)
                 end
+                
+                local connection
+                connection = Safe.InteractPoint.ChildRemoved:Connect(function(child)
+                    if child.Name == "focus" then 
+                        connection:Disconnect() 
+                        task.wait(1)
+                        WindUI:Notify({
+                            Title = "NOTI",
+                            Content = "Wait 1 sec, key auto-fetched.",
+                            Duration = 5,
+                        })
+                        -- print("Két sắt đã mở")
+               
+                        if Key and Key:FindFirstChild("InteractPoint") then
+                            moveToPosition(HumanoidRootPart, Key.WorldPivot, 2)
+                            task.wait(0.3)
+                            fireproximityprompt(Key.InteractPoint.ItemInteractP)
+                            task.wait(0.3)
+                        end
+                
+                        if Backpack:FindFirstChild("Key") then
+                            moveToPosition(HumanoidRootPart, Box.CFrame, 2)
+                            task.wait(0.3)
+                            Character.Humanoid:EquipTool(Backpack:WaitForChild("Key"))
+                            task.wait(0.3)
+                            fireproximityprompt(workspace.Server.SpawnedItems.OfudaBox2.InteractPoint.ItemInteractP)
+                            task.wait(0.5)
+                            fireproximityprompt(workspace.Server.SpawnedItems.Ofuda.Handle.ItemInteractP)
+                            
+                            local finalCFrame = CFrame.new(560.903931, 39.1999626, 602.641663, 0.999947727, 8.53170786e-05, -0.0102250045, 3.32571208e-16, 0.999965191, 0.00834367424, 0.0102253603, -0.00834323838, 0.999912918)
+                            moveToPosition(HumanoidRootPart, finalCFrame, 2)
+                            task.wait(0.3)
+                            game:GetService("ReplicatedStorage").ItemHandler.OfudaRequest:FireServer(
+                                CFrame.new(518.0667724609375, 41.32714080810547, 609.953125) * 
+                                CFrame.Angles(2.7852535247802734, 0.13421067595481873, -3.0918264389038086)
+                            )
+                            task.wait(0.4)
+                            moveToPosition(HumanoidRootPart, Box.CFrame, 2)
+                            task.wait(0.3)
+                            Character.Humanoid:EquipTool(Backpack:WaitForChild("Key"))
+                            task.wait(0.3)
+                            fireproximityprompt(workspace.Server.SpawnedItems.OfudaBox2.InteractPoint.ItemInteractP)
+                            task.wait(0.5)
+                            fireproximityprompt(workspace.Server.SpawnedItems.Ofuda.Handle.ItemInteractP)
+                            task.wait(0.5)
+                            game:GetService("ReplicatedStorage").ItemHandler.OfudaRequest:FireServer(CFrame.new(-122.064453125, 41.4366455078125, 246.3217315673828) * CFrame.Angles(3.0124473571777344, -0.18015220761299133, 3.1183271408081055))
+                            task.wait(0.2)
+                            loadstring(game:HttpGet("https://raw.githubusercontent.com/haxer19/PETAPETA/main/afd"))()
+                        end
+                    -- else
+                    --     print("Két sắt chưa mở")
+                    end
+                end)
                 break
             end
         end
-
-        local keyConnection
-        keyConnection = workspace.Server.MapGenerated.Rooms.Room.Props.Safe.ChildAdded:Connect(function(child)
-            if child.Name == "Key" then
-                local Key = child
-                if Key and Key:FindFirstChild("InteractPoint") then
-                    moveToPosition(HumanoidRootPart, Key.WorldPivot, 2)
-                    task.wait(0.3)
-                    fireproximityprompt(Key.InteractPoint.ItemInteractP)
-                    task.wait(0.3)
-                end
-
-                if Backpack:FindFirstChild("Key") then
-                    moveToPosition(HumanoidRootPart, Box.CFrame, 2)
-                    task.wait(0.3)
-                    Character.Humanoid:EquipTool(Backpack:WaitForChild("Key"))
-                    task.wait(0.3)
-                    fireproximityprompt(workspace.Server.SpawnedItems.OfudaBox2.InteractPoint.ItemInteractP)
-                    task.wait(0.5)
-                    fireproximityprompt(workspace.Server.SpawnedItems.Ofuda.Handle.ItemInteractP)
-                    
-                    local finalCFrame = CFrame.new(560.903931, 39.1999626, 602.641663, 0.999947727, 8.53170786e-05, -0.0102250045, 3.32571208e-16, 0.999965191, 0.00834367424, 0.0102253603, -0.00834323838, 0.999912918)
-                    moveToPosition(HumanoidRootPart, finalCFrame, 2)
-                    task.wait(0.3)
-                    game:GetService("ReplicatedStorage").ItemHandler.OfudaRequest:FireServer(
-                        CFrame.new(518.0667724609375, 41.32714080810547, 609.953125) * 
-                        CFrame.Angles(2.7852535247802734, 0.13421067595481873, -3.0918264389038086)
-                    )
-                    task.wait(0.4)
-                    moveToPosition(HumanoidRootPart, Box.CFrame, 2)
-                    task.wait(0.3)
-                    Character.Humanoid:EquipTool(Backpack:WaitForChild("Key"))
-                    task.wait(0.3)
-                    fireproximityprompt(workspace.Server.SpawnedItems.OfudaBox2.InteractPoint.ItemInteractP)
-                    task.wait(0.5)
-                    fireproximityprompt(workspace.Server.SpawnedItems.Ofuda.Handle.ItemInteractP)
-                    task.wait(0.1)
-                    game:GetService("ReplicatedStorage").ItemHandler.OfudaRequest:FireServer(CFrame.new(-122.064453125, 41.4366455078125, 246.3217315673828) * CFrame.Angles(3.0124473571777344, -0.18015220761299133, 3.1183271408081055))
-                    task.wait(0.1)
-                    loadstring(game:HttpGet("https://raw.githubusercontent.com/haxer19/PETAPETA/main/afd"))()
-                end
-
-                if keyConnection then
-                    keyConnection:Disconnect()
-                end
-            end
-        end)
     end
 })
+--[[
+task.wait(0.1)
+game:GetService("ReplicatedStorage").ItemHandler.OfudaRequest:FireServer(CFrame.new(-122.064453125, 41.4366455078125, 246.3217315673828) * CFrame.Angles(3.0124473571777344, -0.18015220761299133, 3.1183271408081055))
+task.wait(0.3)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/haxer19/PETAPETA/main/afd"))()
+]]
 
 -- END Functions Level
 local ESP = loadstring(game:HttpGet("https://raw.githubusercontent.com/linemaster2/esp-library/main/library.lua"))();
