@@ -265,6 +265,79 @@ local function moveToPosition2(humanoidRootPart, targetCFrame, duration)
     end
 end
 
+local function moveToPosition3(humanoidRootPart, targetCFrame, duration)
+    local humanoid = humanoidRootPart.Parent:FindFirstChild("Humanoid")
+    local TweenService = game:GetService("TweenService")
+    local EnemyFolder = workspace:WaitForChild("Client"):WaitForChild("Enemy")
+    
+    if not humanoid then return end
+
+    local function getNearestEnemyDistance()
+        local nearestDistance = math.huge
+        for _, enemy in pairs(EnemyFolder:GetChildren()) do
+            if enemy:IsA("Part") then
+                local distance = (humanoidRootPart.Position - enemy.Position).Magnitude
+                if distance < nearestDistance then
+                    nearestDistance = distance
+                end
+            end
+        end
+        return nearestDistance
+    end
+
+    local function calculateSafeCFrame()
+        local nearestDistance = getNearestEnemyDistance()
+        if nearestDistance < 20 then
+            for _, enemy in pairs(EnemyFolder:GetChildren()) do
+                if enemy:IsA("Part") then
+                    local enemyPos = enemy.Position
+                    local playerPos = humanoidRootPart.Position
+                    local directionToEnemy = (enemyPos - playerPos).Unit
+                    local safePosition = playerPos - directionToEnemy * (100 - nearestDistance)
+                    return CFrame.new(safePosition)
+                end
+            end
+        end
+        return nil 
+    end
+
+    humanoid.PlatformStand = true
+    
+    while true do
+        local nearestDistance = getNearestEnemyDistance()
+        local safeCFrame = calculateSafeCFrame()
+
+        if nearestDistance < 20 and safeCFrame then
+            local tweenInfo = TweenInfo.new(
+                duration / 2,
+                Enum.EasingStyle.Linear,
+                Enum.EasingDirection.Out
+            )
+            local tween = TweenService:Create(humanoidRootPart, tweenInfo, {CFrame = safeCFrame})
+            tween:Play()
+            tween.Completed:Wait()
+            task.wait(0.5) 
+        elseif nearestDistance >= 20 and nearestDistance <= 100 then
+            task.wait(1)
+            if getNearestEnemyDistance() == math.huge then 
+                break
+            end
+        else
+            local tweenInfo = TweenInfo.new(
+                duration,
+                Enum.EasingStyle.Linear,
+                Enum.EasingDirection.Out
+            )
+            local tween = TweenService:Create(humanoidRootPart, tweenInfo, {CFrame = targetCFrame})
+            tween:Play()
+            tween.Completed:Wait()
+            break
+        end
+    end
+
+    humanoid.PlatformStand = false
+end
+
 Tabs.Main:Section({ Title = "Level 2" })
 Tabs.Main:Button({
     Title = "Hint Paper Finder",
@@ -322,17 +395,16 @@ Tabs.Main:Button({
                             Content = "Wait 1 sec, key auto-fetched.",
                             Duration = 5,
                         })
-                        -- print("Két sắt đã mở")
                
                         if Key and Key:FindFirstChild("InteractPoint") then
-                            moveToPosition(HumanoidRootPart, Key.WorldPivot, 2)
+                            moveToPosition3(HumanoidRootPart, Key.WorldPivot, 2)
                             task.wait(0.3)
                             fireproximityprompt(Key.InteractPoint.ItemInteractP)
                             task.wait(0.3)
                         end
                 
                         if Backpack:FindFirstChild("Key") then
-                            moveToPosition(HumanoidRootPart, Box.CFrame, 2)
+                            moveToPosition3(HumanoidRootPart, Box.CFrame, 2)
                             task.wait(0.3)
                             Character.Humanoid:EquipTool(Backpack:WaitForChild("Key"))
                             task.wait(0.3)
@@ -341,14 +413,14 @@ Tabs.Main:Button({
                             fireproximityprompt(workspace.Server.SpawnedItems.Ofuda.Handle.ItemInteractP)
                             
                             local finalCFrame = CFrame.new(560.903931, 39.1999626, 602.641663, 0.999947727, 8.53170786e-05, -0.0102250045, 3.32571208e-16, 0.999965191, 0.00834367424, 0.0102253603, -0.00834323838, 0.999912918)
-                            moveToPosition(HumanoidRootPart, finalCFrame, 2)
+                            moveToPosition3(HumanoidRootPart, finalCFrame, 2)
                             task.wait(0.3)
                             game:GetService("ReplicatedStorage").ItemHandler.OfudaRequest:FireServer(
                                 CFrame.new(518.0667724609375, 41.32714080810547, 609.953125) * 
                                 CFrame.Angles(2.7852535247802734, 0.13421067595481873, -3.0918264389038086)
                             )
                             task.wait(0.4)
-                            moveToPosition(HumanoidRootPart, Box.CFrame, 2)
+                            moveToPosition3(HumanoidRootPart, Box.CFrame, 2)
                             task.wait(0.3)
                             Character.Humanoid:EquipTool(Backpack:WaitForChild("Key"))
                             task.wait(0.3)
@@ -356,12 +428,12 @@ Tabs.Main:Button({
                             task.wait(0.5)
                             fireproximityprompt(workspace.Server.SpawnedItems.Ofuda.Handle.ItemInteractP)
                             task.wait(0.5)
+                            game:GetService("ReplicatedStorage").ToolBarEvent:FireServer("Equip","Ofuda")
+                            task.wait(0.2)
                             game:GetService("ReplicatedStorage").ItemHandler.OfudaRequest:FireServer(CFrame.new(-122.064453125, 41.4366455078125, 246.3217315673828) * CFrame.Angles(3.0124473571777344, -0.18015220761299133, 3.1183271408081055))
                             task.wait(0.2)
                             loadstring(game:HttpGet("https://raw.githubusercontent.com/haxer19/PETAPETA/main/afd"))()
                         end
-                    -- else
-                    --     print("Két sắt chưa mở")
                     end
                 end)
                 break
@@ -369,12 +441,6 @@ Tabs.Main:Button({
         end
     end
 })
---[[
-task.wait(0.1)
-game:GetService("ReplicatedStorage").ItemHandler.OfudaRequest:FireServer(CFrame.new(-122.064453125, 41.4366455078125, 246.3217315673828) * CFrame.Angles(3.0124473571777344, -0.18015220761299133, 3.1183271408081055))
-task.wait(0.3)
-loadstring(game:HttpGet("https://raw.githubusercontent.com/haxer19/PETAPETA/main/afd"))()
-]]
 
 -- END Functions Level
 local ESP = loadstring(game:HttpGet("https://raw.githubusercontent.com/linemaster2/esp-library/main/library.lua"))();
