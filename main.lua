@@ -516,8 +516,6 @@ Tabs.Main:Button({
                             task.wait(0.3)
                             Character.Humanoid:EquipTool(Backpack:WaitForChild("Key"))
                             task.wait(0.3)
-                            fireproximityprompt(workspace.Server.SpawnedItems.OfudaBox2.InteractPoint.ItemInteractP)
-                            task.wait(0.5)
                             if HumanoidRootPart then
                                 moveToPosition4(HumanoidRootPart, workspace.Server.SpawnedItems.OfudaBox2.OfudaPoint.CFrame, 2)
                             end
