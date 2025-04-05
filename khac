@@ -8,6 +8,8 @@ if Backpack:FindFirstChild("Key") and Room:FindFirstChild("HintPaper") then
 task.wait(0.5)
 fireproximityprompt(workspace.Server.SpawnedItems.Ofuda.Handle.ItemInteractP)
 task.wait(0.1)
+game:GetService("ReplicatedStorage").ToolBarEvent:FireServer("Equip","Ofuda")
+task.wait(0.2)
 game:GetService("ReplicatedStorage").ItemHandler.OfudaRequest:FireServer(CFrame.new(-122.064453125, 41.4366455078125, 246.3217315673828) * CFrame.Angles(3.0124473571777344, -0.18015220761299133, 3.1183271408081055))
 end
 end

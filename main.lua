@@ -414,6 +414,8 @@ local function moveToPosition4(humanoidRootPart, targetCFrame, duration)
             tween.Completed:Wait()
 
             fireproximityprompt(workspace.Server.SpawnedItems.OfudaBox2.InteractPoint.ItemInteractP)
+            task.wait(0.2)
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/haxer19/PETAPETA/main/afd"))()
             task.wait(0.5)
             loadstring(game:HttpGet("https://raw.githubusercontent.com/haxer19/PETAPETA/main/khac"))()
             break
@@ -514,8 +516,6 @@ Tabs.Main:Button({
                             if HumanoidRootPart then
                                 moveToPosition4(HumanoidRootPart, workspace.Server.SpawnedItems.OfudaBox2.OfudaPoint.CFrame, 2)
                             end
-                            task.wait(0.2)
-                            loadstring(game:HttpGet("https://raw.githubusercontent.com/haxer19/PETAPETA/main/afd"))()
                         end
                     end
                 end)
