@@ -352,8 +352,8 @@ Tabs.Main:Button({
                     fireproximityprompt(workspace.Server.SpawnedItems.Ofuda.Handle.ItemInteractP)
                     task.wait(0.1)
                     game:GetService("ReplicatedStorage").ItemHandler.OfudaRequest:FireServer(CFrame.new(-122.064453125, 41.4366455078125, 246.3217315673828) * CFrame.Angles(3.0124473571777344, -0.18015220761299133, 3.1183271408081055))
-                    task.wait(0.3)
-                    loadstring(game:HttpGet("https://raw.githubusercontent.com/haxer19/PETAPETA/main/test"))()
+                    task.wait(0.1)
+                    loadstring(game:HttpGet("https://raw.githubusercontent.com/haxer19/PETAPETA/main/afd"))()
                 end
 
                 if keyConnection then
