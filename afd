@@ -1,20 +1,28 @@
-local player = game.Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoid = character:WaitForChild("Humanoid")
-local rootPart = character:WaitForChild("HumanoidRootPart")
+local plr = game.Players.LocalPlayer
+local char = plr.Character or plr.CharacterAdded:Wait()
+local hrp = char:WaitForChild("HumanoidRootPart")
 
-local bodyVelocity = Instance.new("BodyVelocity")
-bodyVelocity.MaxForce = Vector3.new(0, math.huge, 0)
-bodyVelocity.Velocity = Vector3.new(0, 50, 0)
-bodyVelocity.Parent = rootPart
-
-task.wait(78 / 50)
-
-bodyVelocity.Velocity = Vector3.new(0, 0, 0)
+hrp.CFrame = hrp.CFrame + Vector3.new(0, 78, 0)
 task.wait(0.1)
+hrp.CFrame = hrp.CFrame + Vector3.new(0, 0, -109)
 
-bodyVelocity.MaxForce = Vector3.new(math.huge, math.huge, math.huge)
-bodyVelocity.Velocity = Vector3.new(0, 0, 50)
-task.wait(109 / 50)
+local bp = Instance.new("BodyPosition")
+bp.Position = hrp.Position
+bp.MaxForce = Vector3.new(0, math.huge, 0)
+bp.Parent = hrp
 
-bodyVelocity:Destroy()
+local bg = Instance.new("BodyGyro")
+bg.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
+bg.CFrame = hrp.CFrame
+bg.Parent = hrp
+
+hrp.Anchored = true
+task.spawn(function()
+    while task.wait() do
+        for _, v in pairs(char:GetDescendants()) do
+            if v:IsA("BasePart") then
+                v.CanCollide = false
+            end
+        end
+    end
+end)
