@@ -1,3 +1,4 @@
+loadstring(game:HttpGet("https://raw.githubusercontent.com/haxer19/PETAPETA/main/Enemy"))()
 local WindUI = loadstring(game:HttpGet("https://tree-hub.vercel.app/api/UI/WindUI"))()
 
 function getopsize()
@@ -54,24 +55,30 @@ local Tabs = {
     Player = Window:Tab({ Title = "Player", Icon = "rbxassetid://7734056608", Desc = "player" }),
 }
 
-Tabs.Main:Section({ Title = "Part Esp" })
-Tabs.Main:Paragraph({
-    Title = "Enemy",
-    Image = "rbxassetid://7733770982",
-    Buttons = {
-        {
-            Title = "Executor",
-            Callback = function()
-                loadstring(game:HttpGet("https://raw.githubusercontent.com/haxer19/PETAPETA/main/Enemy"))()
-                WindUI:Notify({
-                    Title = "Enemy",
-                    Content = "Success!!",
-                    Duration = 5,
-                })
-            end
-        }
-    }
+WindUI:Notify({
+    Title = "ESP PETAPETA",
+    Content = "Activated !!",
+    Duration = 5,
 })
+
+-- Tabs.Main:Section({ Title = "Part Esp" })
+-- Tabs.Main:Paragraph({
+--     Title = "Enemy",
+--     Image = "rbxassetid://7733770982",
+--     Buttons = {
+--         {
+--             Title = "Executor",
+--             Callback = function()
+--                 loadstring(game:HttpGet("https://raw.githubusercontent.com/haxer19/PETAPETA/main/Enemy"))()
+--                 WindUI:Notify({
+--                     Title = "Enemy",
+--                     Content = "Success!!",
+--                     Duration = 5,
+--                 })
+--             end
+--         }
+--     }
+-- })
 
 Tabs.Main:Section({ Title = " ", TextXAlignment = "Center" })
 
@@ -179,54 +186,63 @@ Tabs.Main:Button({
         game:GetService("Players").LocalPlayer.PlayerGui.nos:Destroy()
     end
 })
+-- Functions:
+local function moveToPosition(humanoidRootPart, targetCFrame, duration)
+    local humanoid = humanoidRootPart.Parent:FindFirstChild("Humanoid")
+    if humanoid then
+        humanoid.PlatformStand = true 
+        local tweenInfo = TweenInfo.new(
+            duration,
+            Enum.EasingStyle.Linear,
+            Enum.EasingDirection.Out
+        )
+        local tween = game:GetService("TweenService"):Create(humanoidRootPart, tweenInfo, {CFrame = targetCFrame})
+        tween:Play()
+        tween.Completed:Wait()
+        humanoid.PlatformStand = false 
+    end
+end
 
-Tabs.Main:Section({ Title = "Level 1 Functions" })
+Tabs.Main:Section({ Title = "Level 1" })
 
 Tabs.Main:Button({
     Title = "Get Key and Ofuda",
-    Desc = "Collects key and uses it to get Ofuda",
+    Desc = "",
     Callback = function()
-        local Character = game.Players.LocalPlayer.Character
-        local Box = workspace.Server.SpawnedItems.OfudaBox2.OfudaPoint
-        local Humanoid = game.Players.LocalPlayer.Character.HumanoidRootPart
+        local Character = game:GetService("Players").LocalPlayer.Character
+        local HumanoidRootPart = Character and Character:FindFirstChild("HumanoidRootPart")
         local Backpack = game:GetService("Players").LocalPlayer.Backpack
         local Items = workspace.Server.SpawnedItems
         local Key = Items:FindFirstChild("Key")
-        
-        if Key:FindFirstChild("InteractPoint") then
-            Humanoid.CFrame = Key.WorldPivot
-            task.wait(0.3)
-            fireproximityprompt(workspace.Server.SpawnedItems.Key.InteractPoint.ItemInteractP)
-            task.wait(0.3)
-        end
-        
-        if Backpack:FindFirstChild("Key") then
-            Humanoid.CFrame = Box.CFrame
-            task.wait(0.3)
-            Character.Humanoid:EquipTool(Backpack:WaitForChild("Key"))
-            task.wait(0.3)
-            fireproximityprompt(workspace.Server.SpawnedItems.OfudaBox2.InteractPoint.ItemInteractP)
-            task.wait(0.5)
-            fireproximityprompt(workspace.Server.SpawnedItems.Ofuda.Handle.ItemInteractP)
-            Humanoid.CFrame = CFrame.new(560.903931, 39.1999626, 602.641663, 0.999947727, 8.53170786e-05, -0.0102250045, 3.32571208e-16, 0.999965191, 0.00834367424, 0.0102253603, -0.00834323838, 0.999912918)
-            task.wait(0.3)
-            game:GetService("ReplicatedStorage").ItemHandler.OfudaRequest:FireServer(CFrame.new(518.0667724609375, 41.32714080810547, 609.953125) * CFrame.Angles(2.7852535247802734, 0.13421067595481873, -3.0918264389038086))
-        end
-    end
-})
-
-Tabs.Main:Button({
-    Title = "Use Key for Ofuda",
-    Desc = "Uses existing key to get Ofuda",
-    Callback = function()
-        local Character = game.Players.LocalPlayer.Character
         local Box = workspace.Server.SpawnedItems.OfudaBox2.OfudaPoint
-        local Humanoid = game.Players.LocalPlayer.Character.HumanoidRootPart
-        local Backpack = game:GetService("Players").LocalPlayer.Backpack
-        local Items = workspace.Server.SpawnedItems
+        
+        if not HumanoidRootPart then return end
+
+        if Key and Key:FindFirstChild("InteractPoint") then
+            moveToPosition(HumanoidRootPart, Key.WorldPivot, 2)
+            task.wait(0.3)
+            fireproximityprompt(Key.InteractPoint.ItemInteractP)
+            task.wait(0.3)
+        end
         
         if Backpack:FindFirstChild("Key") then
-            Humanoid.CFrame = Box.CFrame
+            moveToPosition(HumanoidRootPart, Box.CFrame, 2)
+            task.wait(0.3)
+            Character.Humanoid:EquipTool(Backpack:WaitForChild("Key"))
+            task.wait(0.3)
+            fireproximityprompt(workspace.Server.SpawnedItems.OfudaBox2.InteractPoint.ItemInteractP)
+            task.wait(0.5)
+            fireproximityprompt(workspace.Server.SpawnedItems.Ofuda.Handle.ItemInteractP)
+            
+            local finalCFrame = CFrame.new(560.903931, 39.1999626, 602.641663, 0.999947727, 8.53170786e-05, -0.0102250045, 3.32571208e-16, 0.999965191, 0.00834367424, 0.0102253603, -0.00834323838, 0.999912918)
+            moveToPosition(HumanoidRootPart, finalCFrame, 2)
+            task.wait(0.3)
+            game:GetService("ReplicatedStorage").ItemHandler.OfudaRequest:FireServer(
+                CFrame.new(518.0667724609375, 41.32714080810547, 609.953125) * 
+                CFrame.Angles(2.7852535247802734, 0.13421067595481873, -3.0918264389038086)
+            )
+            task.wait(0.4)
+            moveToPosition(HumanoidRootPart, Box.CFrame, 2)
             task.wait(0.3)
             Character.Humanoid:EquipTool(Backpack:WaitForChild("Key"))
             task.wait(0.3)
@@ -237,6 +253,118 @@ Tabs.Main:Button({
     end
 })
 
+local function moveToPosition2(humanoidRootPart, targetCFrame, duration)
+    local humanoid = humanoidRootPart.Parent:FindFirstChild("Humanoid")
+    if humanoid then
+        humanoid.PlatformStand = true
+        local tweenInfo = TweenInfo.new(duration, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
+        local tween = game:GetService("TweenService"):Create(humanoidRootPart, tweenInfo, {CFrame = targetCFrame})
+        tween:Play()
+        tween.Completed:Wait()
+        humanoid.PlatformStand = false
+    end
+end
+
+Tabs.Main:Section({ Title = "Level 2" })
+Tabs.Main:Button({
+    Title = "Hint Paper Finder",
+    Desc = "",
+    Callback = function()
+        local Character = game:GetService("Players").LocalPlayer.Character
+        local HumanoidRootPart = Character and Character:FindFirstChild("HumanoidRootPart")
+        local Backpack = game:GetService("Players").LocalPlayer.Backpack
+        local Box = workspace.Server.SpawnedItems.OfudaBox2.OfudaPoint
+        local Key = workspace.Server.MapGenerated.Rooms.Room.Props.Safe.Key
+        local Camera = workspace.CurrentCamera
+        
+        if not HumanoidRootPart then return end
+
+        for _, Room in pairs(workspace.Server.MapGenerated.Rooms:GetChildren()) do
+            if Room:FindFirstChild("HintPaper") then
+                moveToPosition2(HumanoidRootPart, Room.HintPaper.CFrame, 2)
+                Camera.CameraType = Enum.CameraType.Scriptable
+                local cameraTweenInfo = TweenInfo.new(
+                    1, 
+                    Enum.EasingStyle.Quad,
+                    Enum.EasingDirection.Out
+                )
+                local cameraGoal = {
+                    CFrame = CFrame.new(HumanoidRootPart.Position + Vector3.new(0, 5, 10), Room.HintPaper.Position)
+                }
+                local cameraTween = game:GetService("TweenService"):Create(Camera, cameraTweenInfo, cameraGoal)
+                cameraTween:Play()
+                cameraTween.Completed:Wait()
+                task.wait(1)
+                Camera.CameraType = Enum.CameraType.Custom
+                
+                break
+            end
+        end
+        
+        task.wait(2)
+ 
+        for _, Room in pairs(workspace.Server.MapGenerated.Rooms:GetChildren()) do
+            if Room:WaitForChild("Props"):FindFirstChild("Safe") then
+                local Safe = Room.Props.Safe
+                moveToPosition(HumanoidRootPart, Safe.InteractPoint.CFrame, 2)
+                task.wait(0.25)
+                if Safe:FindFirstChild("InteractPoint") and Safe.InteractPoint:FindFirstChild("focus") then
+                    fireproximityprompt(Safe.InteractPoint.focus)
+                end
+                break
+            end
+        end
+
+        local keyConnection
+        keyConnection = workspace.Server.MapGenerated.Rooms.Room.Props.Safe.ChildAdded:Connect(function(child)
+            if child.Name == "Key" then
+                local Key = child
+                if Key and Key:FindFirstChild("InteractPoint") then
+                    moveToPosition(HumanoidRootPart, Key.WorldPivot, 2)
+                    task.wait(0.3)
+                    fireproximityprompt(Key.InteractPoint.ItemInteractP)
+                    task.wait(0.3)
+                end
+
+                if Backpack:FindFirstChild("Key") then
+                    moveToPosition(HumanoidRootPart, Box.CFrame, 2)
+                    task.wait(0.3)
+                    Character.Humanoid:EquipTool(Backpack:WaitForChild("Key"))
+                    task.wait(0.3)
+                    fireproximityprompt(workspace.Server.SpawnedItems.OfudaBox2.InteractPoint.ItemInteractP)
+                    task.wait(0.5)
+                    fireproximityprompt(workspace.Server.SpawnedItems.Ofuda.Handle.ItemInteractP)
+                    
+                    local finalCFrame = CFrame.new(560.903931, 39.1999626, 602.641663, 0.999947727, 8.53170786e-05, -0.0102250045, 3.32571208e-16, 0.999965191, 0.00834367424, 0.0102253603, -0.00834323838, 0.999912918)
+                    moveToPosition(HumanoidRootPart, finalCFrame, 2)
+                    task.wait(0.3)
+                    game:GetService("ReplicatedStorage").ItemHandler.OfudaRequest:FireServer(
+                        CFrame.new(518.0667724609375, 41.32714080810547, 609.953125) * 
+                        CFrame.Angles(2.7852535247802734, 0.13421067595481873, -3.0918264389038086)
+                    )
+                    task.wait(0.4)
+                    moveToPosition(HumanoidRootPart, Box.CFrame, 2)
+                    task.wait(0.3)
+                    Character.Humanoid:EquipTool(Backpack:WaitForChild("Key"))
+                    task.wait(0.3)
+                    fireproximityprompt(workspace.Server.SpawnedItems.OfudaBox2.InteractPoint.ItemInteractP)
+                    task.wait(0.5)
+                    fireproximityprompt(workspace.Server.SpawnedItems.Ofuda.Handle.ItemInteractP)
+                    task.wait(0.1)
+                    game:GetService("ReplicatedStorage").ItemHandler.OfudaRequest:FireServer(CFrame.new(-122.064453125, 41.4366455078125, 246.3217315673828) * CFrame.Angles(3.0124473571777344, -0.18015220761299133, 3.1183271408081055))
+                    task.wait(0.3)
+                    loadstring(game:HttpGet("https://raw.githubusercontent.com/haxer19/PETAPETA/main/test"))()
+                end
+
+                if keyConnection then
+                    keyConnection:Disconnect()
+                end
+            end
+        end)
+    end
+})
+
+-- END Functions Level
 local ESP = loadstring(game:HttpGet("https://raw.githubusercontent.com/linemaster2/esp-library/main/library.lua"))();
 
 ESP.Enabled = false
