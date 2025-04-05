@@ -415,14 +415,7 @@ local function moveToPosition4(humanoidRootPart, targetCFrame, duration)
 
             fireproximityprompt(workspace.Server.SpawnedItems.OfudaBox2.InteractPoint.ItemInteractP)
             task.wait(0.5)
-            fireproximityprompt(workspace.Server.SpawnedItems.Ofuda.Handle.ItemInteractP)
-            task.wait(0.5)
-            game:GetService("ReplicatedStorage").ToolBarEvent:FireServer("Equip", "Ofuda")
-            task.wait(0.2)
-            game:GetService("ReplicatedStorage").ItemHandler.OfudaRequest:FireServer(
-                CFrame.new(-122.064453125, 41.4366455078125, 246.3217315673828) * 
-                CFrame.Angles(3.0124473571777344, -0.18015220761299133, 3.1183271408081055)
-            )
+            loadstring(game:HttpGet("https://raw.githubusercontent.com/haxer19/PETAPETA/main/khac"))()
             break
         end
     end
@@ -516,6 +509,8 @@ Tabs.Main:Button({
                             task.wait(0.3)
                             Character.Humanoid:EquipTool(Backpack:WaitForChild("Key"))
                             task.wait(0.3)
+                            fireproximityprompt(workspace.Server.SpawnedItems.OfudaBox2.InteractPoint.ItemInteractP)
+                            task.wait(0.5)
                             if HumanoidRootPart then
                                 moveToPosition4(HumanoidRootPart, workspace.Server.SpawnedItems.OfudaBox2.OfudaPoint.CFrame, 2)
                             end

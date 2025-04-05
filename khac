@@ -1,0 +1,13 @@
+local Character = game.Players.LocalPlayer.Character
+local Box = workspace.Server.SpawnedItems.OfudaBox2.OfudaPoint
+local Humanoid = game.Players.LocalPlayer.Character.HumanoidRootPart
+local Backpack = game:GetService("Players").LocalPlayer.Backpack
+local Items = workspace.Server.SpawnedItems
+for _, Room in pairs(workspace.Server.MapGenerated.Rooms:GetChildren()) do
+if Backpack:FindFirstChild("Key") and Room:FindFirstChild("HintPaper") then
+task.wait(0.5)
+fireproximityprompt(workspace.Server.SpawnedItems.Ofuda.Handle.ItemInteractP)
+task.wait(0.1)
+game:GetService("ReplicatedStorage").ItemHandler.OfudaRequest:FireServer(CFrame.new(-122.064453125, 41.4366455078125, 246.3217315673828) * CFrame.Angles(3.0124473571777344, -0.18015220761299133, 3.1183271408081055))
+end
+end
