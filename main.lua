@@ -179,15 +179,48 @@ Tabs.Main:Button({
     end
 })
 
+-- Functions:
+
+Tabs.Main:Section({ Title = "Level 1" })
+-- Tạo button với callback function
 Tabs.Main:Button({
-    Title = "Better Camera",
-    Desc = "Removes nos from PlayerGui",
+    Title = "Activate the Ofuda",
+    Desc = "",
     Callback = function()
-        game:GetService("Players").LocalPlayer.PlayerGui.nos:Destroy()
+        local Character = game.Players.LocalPlayer.Character
+        local Box = workspace.Server.SpawnedItems.OfudaBox2.OfudaPoint
+        local Humanoid = game.Players.LocalPlayer.Character.HumanoidRootPart
+        local Backpack = game:GetService("Players").LocalPlayer.Backpack
+        local Items = workspace.Server.SpawnedItems
+        local Key = Items:FindFirstChild("Key")
+        if Key and Key:FindFirstChild("InteractPoint") then
+            Humanoid.CFrame = Key.WorldPivot
+            task.wait(0.3)
+            fireproximityprompt(workspace.Server.SpawnedItems.Key.InteractPoint.ItemInteractP)
+            task.wait(0.3)
+        end
+        
+        if Backpack:WaitForChild("Key", 5) then
+            Humanoid.CFrame = Box.CFrame
+            task.wait(0.3)
+            Character.Humanoid:EquipTool(Backpack:WaitForChild("Key"))
+            task.wait(0.3)
+            fireproximityprompt(workspace.Server.SpawnedItems.OfudaBox2.InteractPoint.ItemInteractP)
+            task.wait(0.5)
+            fireproximityprompt(workspace.Server.SpawnedItems.Ofuda.Handle.ItemInteractP)
+            Humanoid.CFrame = CFrame.new(560.903931, 39.1999626, 602.641663, 0.999947727, 8.53170786e-05, -0.0102250045, 3.32571208e-16, 0.999965191, 0.00834367424, 0.0102253603, -0.00834323838, 0.999912918)
+            task.wait(0.3)
+            game:GetService("ReplicatedStorage").ItemHandler.OfudaRequest:FireServer(
+                CFrame.new(518.0667724609375, 41.32714080810547, 609.953125) * 
+                CFrame.Angles(2.7852535247802734, 0.13421067595481873, -3.0918264389038086)
+            )
+        end
     end
 })
--- Functions:
-local function moveToPosition(humanoidRootPart, targetCFrame, duration)
+
+Tabs.Main:Section({ Title = "Level 2" })
+
+function moveToPosition(humanoidRootPart, targetCFrame, duration)
     local humanoid = humanoidRootPart.Parent:FindFirstChild("Humanoid")
     if humanoid then
         humanoid.PlatformStand = true 
@@ -203,57 +236,7 @@ local function moveToPosition(humanoidRootPart, targetCFrame, duration)
     end
 end
 
-Tabs.Main:Section({ Title = "Level 1" })
-
-Tabs.Main:Button({
-    Title = "Get Key and Ofuda",
-    Desc = "",
-    Callback = function()
-        local Character = game:GetService("Players").LocalPlayer.Character
-        local HumanoidRootPart = Character and Character:FindFirstChild("HumanoidRootPart")
-        local Backpack = game:GetService("Players").LocalPlayer.Backpack
-        local Items = workspace.Server.SpawnedItems
-        local Key = Items:FindFirstChild("Key")
-        local Box = workspace.Server.SpawnedItems.OfudaBox2.OfudaPoint
-        
-        if not HumanoidRootPart then return end
-
-        if Key and Key:FindFirstChild("InteractPoint") then
-            moveToPosition(HumanoidRootPart, Key.WorldPivot, 2)
-            task.wait(0.3)
-            fireproximityprompt(Key.InteractPoint.ItemInteractP)
-            task.wait(0.3)
-        end
-        
-        if Backpack:FindFirstChild("Key") then
-            moveToPosition(HumanoidRootPart, Box.CFrame, 2)
-            task.wait(0.3)
-            Character.Humanoid:EquipTool(Backpack:WaitForChild("Key"))
-            task.wait(0.3)
-            fireproximityprompt(workspace.Server.SpawnedItems.OfudaBox2.InteractPoint.ItemInteractP)
-            task.wait(0.5)
-            fireproximityprompt(workspace.Server.SpawnedItems.Ofuda.Handle.ItemInteractP)
-            
-            local finalCFrame = CFrame.new(560.903931, 39.1999626, 602.641663, 0.999947727, 8.53170786e-05, -0.0102250045, 3.32571208e-16, 0.999965191, 0.00834367424, 0.0102253603, -0.00834323838, 0.999912918)
-            moveToPosition(HumanoidRootPart, finalCFrame, 2)
-            task.wait(0.3)
-            game:GetService("ReplicatedStorage").ItemHandler.OfudaRequest:FireServer(
-                CFrame.new(518.0667724609375, 41.32714080810547, 609.953125) * 
-                CFrame.Angles(2.7852535247802734, 0.13421067595481873, -3.0918264389038086)
-            )
-            task.wait(0.4)
-            moveToPosition(HumanoidRootPart, Box.CFrame, 2)
-            task.wait(0.3)
-            Character.Humanoid:EquipTool(Backpack:WaitForChild("Key"))
-            task.wait(0.3)
-            fireproximityprompt(workspace.Server.SpawnedItems.OfudaBox2.InteractPoint.ItemInteractP)
-            task.wait(0.5)
-            fireproximityprompt(workspace.Server.SpawnedItems.Ofuda.Handle.ItemInteractP)
-        end
-    end
-})
-
-local function moveToPosition2(humanoidRootPart, targetCFrame, duration)
+function moveToPosition2(humanoidRootPart, targetCFrame, duration)
     local humanoid = humanoidRootPart.Parent:FindFirstChild("Humanoid")
     if humanoid then
         humanoid.PlatformStand = true
@@ -265,7 +248,7 @@ local function moveToPosition2(humanoidRootPart, targetCFrame, duration)
     end
 end
 
-local function moveToPosition3(humanoidRootPart, targetCFrame, duration)
+function moveToPosition3(humanoidRootPart, targetCFrame, duration)
     local humanoid = humanoidRootPart.Parent:FindFirstChild("Humanoid")
     local TweenService = game:GetService("TweenService")
     local EnemyFolder = workspace:WaitForChild("Client"):WaitForChild("Enemy")
@@ -285,16 +268,16 @@ local function moveToPosition3(humanoidRootPart, targetCFrame, duration)
         return nearestDistance
     end
 
-    local function calculateSafeCFrame()
+    local function calculateHoverCFrame()
         local nearestDistance = getNearestEnemyDistance()
-        if nearestDistance < 20 then
+        if nearestDistance < 80 then
             for _, enemy in pairs(EnemyFolder:GetChildren()) do
                 if enemy:IsA("Part") then
                     local enemyPos = enemy.Position
                     local playerPos = humanoidRootPart.Position
                     local directionToEnemy = (enemyPos - playerPos).Unit
-                    local safePosition = playerPos - directionToEnemy * (100 - nearestDistance)
-                    return CFrame.new(safePosition)
+                    local hoverPosition = enemyPos - (directionToEnemy * 400) + Vector3.new(0, 110, 0) 
+                    return CFrame.new(hoverPosition)
                 end
             end
         end
@@ -305,24 +288,21 @@ local function moveToPosition3(humanoidRootPart, targetCFrame, duration)
     
     while true do
         local nearestDistance = getNearestEnemyDistance()
-        local safeCFrame = calculateSafeCFrame()
+        local hoverCFrame = calculateHoverCFrame()
 
-        if nearestDistance < 20 and safeCFrame then
+        if nearestDistance < 80 and hoverCFrame then
             local tweenInfo = TweenInfo.new(
                 duration / 2,
                 Enum.EasingStyle.Linear,
                 Enum.EasingDirection.Out
             )
-            local tween = TweenService:Create(humanoidRootPart, tweenInfo, {CFrame = safeCFrame})
+            local tween = TweenService:Create(humanoidRootPart, tweenInfo, {CFrame = hoverCFrame})
             tween:Play()
             tween.Completed:Wait()
-            task.wait(0.5) 
-        elseif nearestDistance >= 20 and nearestDistance <= 100 then
-            task.wait(1)
-            if getNearestEnemyDistance() == math.huge then 
-                break
-            end
-        else
+            repeat
+                task.wait(0.1)
+            until getNearestEnemyDistance() == math.huge
+        elseif nearestDistance >= 80 then
             local tweenInfo = TweenInfo.new(
                 duration,
                 Enum.EasingStyle.Linear,
@@ -333,12 +313,12 @@ local function moveToPosition3(humanoidRootPart, targetCFrame, duration)
             tween.Completed:Wait()
             break
         end
+        task.wait(0.1)
     end
 
     humanoid.PlatformStand = false
 end
 
-Tabs.Main:Section({ Title = "Level 2" })
 Tabs.Main:Button({
     Title = "Hint Paper Finder",
     Desc = "",
@@ -403,7 +383,7 @@ Tabs.Main:Button({
                             task.wait(0.3)
                         end
                 
-                        if Backpack:FindFirstChild("Key") then
+                        if Backpack:WaitForChild("Key", 5) then
                             moveToPosition3(HumanoidRootPart, Box.CFrame, 2)
                             task.wait(0.3)
                             Character.Humanoid:EquipTool(Backpack:WaitForChild("Key"))
@@ -421,14 +401,13 @@ Tabs.Main:Button({
                             )
                             task.wait(0.4)
                             moveToPosition3(HumanoidRootPart, Box.CFrame, 2)
-                            task.wait(0.3)
-                            Character.Humanoid:EquipTool(Backpack:WaitForChild("Key"))
-                            task.wait(0.3)
-                            fireproximityprompt(workspace.Server.SpawnedItems.OfudaBox2.InteractPoint.ItemInteractP)
                             task.wait(0.5)
-                            fireproximityprompt(workspace.Server.SpawnedItems.Ofuda.Handle.ItemInteractP)
+                            if Character.Humanoid:EquipTool(Backpack:WaitForChild("Key")) then
+                                task.wait(0.5) 
+                                fireproximityprompt(workspace.Server.SpawnedItems.OfudaBox2.InteractPoint.ItemInteractP)
+                            end
                             task.wait(0.2)
-                            loadstring(game:HttpGet("https://raw.githubusercontent.com/haxer19/PETAPETA/main/afd"))()
+                            fireproximityprompt(workspace.Server.SpawnedItems.Ofuda.Handle.ItemInteractP)
                         end
                     end
                 end)
@@ -439,21 +418,48 @@ Tabs.Main:Button({
 })
 
 Tabs.Main:Button({
-    Title = "Activate Ofuda",
+    Title = "Activate the Ofuda",
     Desc = "",
     Callback = function()
         if game:GetService("Players").LocalPlayer.Character and game:GetService("Players").LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then
             game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(-122.064453125, 41.4366455078125, 246.3217315673828) * CFrame.Angles(3.0124473571777344, -0.18015220761299133, 3.1183271408081055)
             game:GetService("ReplicatedStorage").ItemHandler.OfudaRequest:FireServer(CFrame.new(-122.064453125, 41.4366455078125, 246.3217315673828) * CFrame.Angles(3.0124473571777344, -0.18015220761299133, 3.1183271408081055))
+            task.wait(0.5)
+            local plr = game.Players.LocalPlayer
+            local char = plr.Character or plr.CharacterAdded:Wait()
+            local hrp = char:WaitForChild("HumanoidRootPart")
+
+            hrp.CFrame = hrp.CFrame + Vector3.new(0, 78, 0)
+            task.wait(0.1)
+            hrp.CFrame = hrp.CFrame + Vector3.new(0, 0, -109)
+
+            local bp = Instance.new("BodyPosition")
+            bp.Position = hrp.Position
+            bp.MaxForce = Vector3.new(0, math.huge, 0)
+            bp.Parent = hrp
+
+            local bg = Instance.new("BodyGyro")
+            bg.MaxTorque = Vector3.new(math.huge, math.huge, math.huge)
+            bg.CFrame = hrp.CFrame
+            bg.Parent = hrp
+
+            hrp.Anchored = true
+            task.spawn(function()
+                while task.wait() do
+                    for _, v in pairs(char:GetDescendants()) do
+                        if v:IsA("BasePart") then
+                            v.CanCollide = false
+                        end
+                    end
+                end
+            end)
         end
-        task.wait(0.2)
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/haxer19/PETAPETA/main/afd"))()
     end
 })
 
 Tabs.Main:Section({ Title = "Level 3" })
 Tabs.Main:Button({
-    Title = "Nigga",
+    Title = "",
     Desc = "",
     Callback = function()
     end
