@@ -1,4 +1,4 @@
-local TrollLibrary = {}
+local TL = {}
 
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -32,12 +32,45 @@ local function findNearestEnemy()
     return closestEnemy
 end
 
+local function checkObstacle(startPos, targetPos)
+    local rayOrigin = startPos
+    local rayDirection = (targetPos - startPos)
+    local raycastParams = RaycastParams.new()
+    raycastParams.FilterDescendantsInstances = {Character}
+    raycastParams.FilterType = Enum.RaycastFilterType.Blacklist
+    
+    local raycastResult = workspace:Raycast(rayOrigin, rayDirection, raycastParams)
+    return raycastResult
+end
+
+local function getSafePosition(enemyPos, desiredPos)
+    local direction = (desiredPos - enemyPos).Unit
+    local checkPos = enemyPos + direction * distanceFromEnemy + Vector3.new(0, hoverHeight, 0)
+    
+    local obstacle = checkObstacle(HumanoidRootPart.Position, checkPos)
+    
+    if obstacle then
+        for i = 1, 5 do
+            local newHeight = hoverHeight + (i * 5)
+            local testPos = enemyPos + direction * distanceFromEnemy + Vector3.new(0, newHeight, 0)
+            if not checkObstacle(HumanoidRootPart.Position, testPos) then
+                return testPos
+            end
+        end
+        return enemyPos + direction * distanceFromEnemy + Vector3.new(0, hoverHeight + 20, 0)
+    end
+    
+    return checkPos
+end
+
 local function updateTrollPosition()
     if targetEnemy and targetEnemy.Parent then
         local enemyPos = targetEnemy.Position
         local direction = (HumanoidRootPart.Position - enemyPos).Unit
-        local targetPos = enemyPos + direction * distanceFromEnemy + Vector3.new(0, hoverHeight, 0)
-        HumanoidRootPart.CFrame = CFrame.new(HumanoidRootPart.Position:Lerp(targetPos, 0.1))
+        local idealPos = enemyPos + direction * distanceFromEnemy + Vector3.new(0, hoverHeight, 0)
+        
+        local safePos = getSafePosition(enemyPos, HumanoidRootPart.Position)
+        HumanoidRootPart.CFrame = CFrame.new(HumanoidRootPart.Position:Lerp(safePos, 0.1))
         Humanoid.WalkSpeed = 0
         Humanoid.JumpPower = 0
     else
@@ -48,7 +81,7 @@ local function updateTrollPosition()
     end
 end
 
-function TrollLibrary:StartTroll()
+function TL:StartTroll()
     if not connection then
         connection = RunService.Heartbeat:Connect(function()
             local newEnemy = findNearestEnemy()
@@ -68,7 +101,7 @@ function TrollLibrary:StartTroll()
     end
 end
 
-function TrollLibrary:StopTroll()
+function TL:StopTroll()
     if connection then
         connection:Disconnect()
         connection = nil
@@ -85,4 +118,4 @@ LocalPlayer.CharacterAdded:Connect(function(newCharacter)
     Humanoid = Character:WaitForChild("Humanoid")
 end)
 
-return TrollLibrary
+return TL
