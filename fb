@@ -9,11 +9,20 @@ local connection
 local dynamicLight
 
 local function setupFullbright()
-    Lighting.Brightness = 1  
-    Lighting.ClockTime = 14
-    Lighting.FogEnd = 100000
-    Lighting.GlobalShadows = false
-    Lighting.OutdoorAmbient = Color3.fromRGB(128, 128, 128)
+    Lighting.Brightness = 1         
+    Lighting.ClockTime = 14       
+    Lighting.FogEnd = 100000         
+    Lighting.GlobalShadows = false  
+    Lighting.OutdoorAmbient = Color3.fromRGB(128, 128, 128) 
+    Lighting.Ambient = Color3.fromRGB(128, 128, 128)       
+end
+
+local function disablePostProcessingEffects()
+    for _, effect in pairs(Lighting:GetChildren()) do
+        if effect:IsA("PostEffect") then
+            effect.Enabled = false  
+        end
+    end
 end
 
 local function createDynamicLight(player)
@@ -21,9 +30,9 @@ local function createDynamicLight(player)
     local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
     dynamicLight = Instance.new("PointLight")
     dynamicLight.Name = "DynamicFullbright"
-    dynamicLight.Brightness = 0.5  
-    dynamicLight.Range = 20  
-    dynamicLight.Color = Color3.fromRGB(255, 255, 255)
+    dynamicLight.Brightness = 0.5    
+    dynamicLight.Range = 20        
+    dynamicLight.Color = Color3.fromRGB(255, 255, 255) 
     dynamicLight.Parent = humanoidRootPart
     
     return dynamicLight
@@ -33,21 +42,26 @@ function fb:Enable()
     fullbrightEnabled = true
     local player = Players.LocalPlayer
     setupFullbright()
+    disablePostProcessingEffects()
     dynamicLight = createDynamicLight(player)
+    
     if connection then
         connection:Disconnect()
     end
     
     connection = RunService.RenderStepped:Connect(function()
-        if fullbrightEnabled and player.Character then
-            local character = player.Character
-            local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
-            if humanoidRootPart and dynamicLight then
-                dynamicLight.Parent = humanoidRootPart
+        if fullbrightEnabled then
+            setupFullbright()
+            disablePostProcessingEffects()
+            if player.Character then
+                local humanoidRootPart = player.Character:FindFirstChild("HumanoidRootPart")
+                if humanoidRootPart and dynamicLight then
+                    dynamicLight.Parent = humanoidRootPart
+                end
             end
         end
     end)
-
+    
     player.CharacterAdded:Connect(function()
         if fullbrightEnabled then
             dynamicLight = createDynamicLight(player)
