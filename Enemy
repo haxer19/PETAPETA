@@ -29,7 +29,7 @@ local function CreateESP(part)
     local function UpdateESP()
         if part and part.Parent then
             local distance = (Camera.CFrame.Position - part.Position).Magnitude
-            TextLabel.Text = string.format("Name: ENEMY | Studs: %.1f", distance)
+            TextLabel.Text = string.format("Name: PETAPETA | Studs: %.1f", distance)
         else
             ESPs[part] = nil
         end
@@ -39,11 +39,10 @@ local function CreateESP(part)
     Billboard.Parent = part
 
     StarterGui:SetCore("SendNotification", {
-        Title = "⚠️ Enemy Spotted",
+        Title = "⚠️",
         Text = "PETAPETA spawned!",
         Duration = 5
     })
-    warn("Enemy ESP Added: " .. part.Name)
 end
 
 local function RemoveESP(part)
@@ -51,11 +50,10 @@ local function RemoveESP(part)
         ESPs[part][1]:Destroy()
         ESPs[part] = nil
         StarterGui:SetCore("SendNotification", {
-            Title = "✅ Enemy Vanished",
+            Title = "✅",
             Text = "PETAPETA despawned!",
             Duration = 5
         })        
-        warn("Enemy ESP Removed: " .. part.Name)
     end
 end
 
@@ -66,7 +64,7 @@ local function addHighlightWithDelay(model)
     newHighlight.Parent = model
 end
 
-local function checkAndAddHighlight()
+local function addHL()
     local clientFolder = workspace:FindFirstChild("Client")
     if clientFolder then
         local enemyFolder = clientFolder:FindFirstChild("Enemy")
@@ -112,7 +110,7 @@ end)
 
 EnemyFolder.ChildRemoved:Connect(RemoveESP)
 
-checkAndAddHighlight()
+addHL()
 
 workspace.ChildAdded:Connect(function(child)
     if child:IsA("Folder") and child.Name == "Client" then
